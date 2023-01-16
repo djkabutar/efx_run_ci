@@ -12,6 +12,8 @@ cd $HOME || exit
 
 wget "https://www.efinixinc.com/dl/efinity-2021.2.323-ubuntu-x64.tar.bz2"
 tar -xvf efinity-2021.2.323-ubuntu-x64.tar.bz2
+
+git clone https://github.com/djkabutar/fpga_miner_mipi.git --depth=1 ${FOLDER_NAME}
  
 sed -i "s|location=\"[^\"]*\"|location=\"${PROJECT_FOLDER}\"|" ${PROJECT_FOLDER}/${PROJECT_NAME}.xml
 
