@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+# HOME="/drone/src"
+HOME="/root"
+EFINITY_HOME="${HOME}/efinity/2021.2"
+FOLDER_NAME="$1"
+PROJECT_NAME="$2"
+PROJECT_FOLDER="${HOME}/${FOLDER_NAME}"
+FPGA="$3"
+PYTHON_PATH="${EFINITY_HOME}/bin"
+cd $HOME || exit
+
+wget "https://www.efinixinc.com/dl/efinity-2021.2.323-ubuntu-x64.tar.bz2"
+tar -xvf efinity-2021.2.323-ubuntu-x64.tar.bz2
+ 
+sed -i "s|location=\"[^\"]*\"|location=\"${PROJECT_FOLDER}\"|" ${PROJECT_FOLDER}/${PROJECT_NAME}.xml
+
+export EFINITY_HOME="${EFINITY_HOME}"
+export PATH=${PYTHON_PATH}:$(echo $PATH)
+export EFXPT_HOME="${EFINITY_HOME}/pt"
+
+${EFINITY_HOME}/scripts/efx_run.py ${PROJECT_FOLDER}/${PROJECT_NAME}.xml 
