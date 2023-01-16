@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# HOME="/drone/src"
+# HOME="/home/dj"
 HOME="/root"
 EFINITY_HOME="${HOME}/efinity/2021.2"
 FOLDER_NAME="$1"
@@ -21,9 +21,12 @@ export EFINITY_HOME="${EFINITY_HOME}"
 export PATH=${PYTHON_PATH}:$(echo $PATH)
 export EFXPT_HOME="${EFINITY_HOME}/pt"
 
-${EFINITY_HOME}/scripts/efx_run.py ${PROJECT_FOLDER}/${PROJECT_NAME}.xml 
+cd ${PROJECT_FOLDER} || exit
 
-BIT_RES=$(curl bashupload.com -T ${HOME}/outflow/${PROJECT_NAME}.bit | awk '{ print $2 }')
-HEX_RES=$(curl bashupload.com -T ${HOME}/outflow/${PROJECT_NAME}.hex | awk '{ print $2 }')
+${EFINITY_HOME}/scripts/efx_run.py ${PROJECT_NAME}.xml 
+${EFINITY_HOME}/scripts/efx_run.py -f pgm ${PROJECT_NAME}.xml 
 
-curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_API}/sendMessage -d text="Build Successful\nBit File: ${BIT_RES}\nHex File: ${HEX_RES}" -d chat_id="${CI_CHANNEL_ID}" -d parse_mode=HTML 
+BIT_RES=$(curl bashupload.com -T ${PROJECT_FOLDER}/outflow/${PROJECT_NAME}.bit | awk '{ print $2 }')
+HEX_RES=$(curl bashupload.com -T ${PROJECT_FOLDER}/outflow/${PROJECT_NAME}.hex | awk '{ print $2 }')
+
+curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_API}/sendMessage -d text="Build Successful%0ABit File: ${BIT_RES}%0AHex File: ${HEX_RES}" -d chat_id="${CI_CHANNEL_ID}" -d parse_mode=HTML 
