@@ -22,3 +22,8 @@ export PATH=${PYTHON_PATH}:$(echo $PATH)
 export EFXPT_HOME="${EFINITY_HOME}/pt"
 
 ${EFINITY_HOME}/scripts/efx_run.py ${PROJECT_FOLDER}/${PROJECT_NAME}.xml 
+
+BIT_RES=$(curl bashupload.com -T ${HOME}/outflow/${PROJECT_NAME}.bit | awk '{ print $2 }')
+HEX_RES=$(curl bashupload.com -T ${HOME}/outflow/${PROJECT_NAME}.hex | awk '{ print $2 }')
+
+curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_API}/sendMessage -d text="Build Successful\nBit File: ${BIT_RES}\nHex File: ${HEX_RES}"
